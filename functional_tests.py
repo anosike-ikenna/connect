@@ -16,6 +16,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # She notices the sleek page title contains the site name
         self.assertIn("Connect Social Network", self.browser.title)
+        self.fail("Finish the test!")
 
         # she sees a textbox that invites her to 'write something'
 
