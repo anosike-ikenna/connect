@@ -1,5 +1,6 @@
 from selenium import webdriver
 import unittest
+import time
 
 
 class NewVisitorTest(unittest.TestCase):
@@ -16,17 +17,30 @@ class NewVisitorTest(unittest.TestCase):
 
         # She notices the sleek page title contains the site name
         self.assertIn("Connect Social Network", self.browser.title)
-        self.fail("Finish the test!")
 
         # she sees a textbox that invites her to 'write something'
+        inputbox = self.browser.find_element_by_id("id_new_post")
+        self.assertEqual(
+            inputbox.get_attribute("placeholder").lower(), 
+            "write something..."
+        )
 
         # she types 'Hello everybody' into the textbox
+        INPUT_TEXT = "Hello everybody"
+        inputbox.send_keys(INPUT_TEXT)
 
         # when she hits post, the page updates and now contains
         # 'Hello everybody' and the timestamp
+        post_button = browser.find_element_by_id("id_post_btn")
+        post_button.click()
+        time.sleep(1)
+        new_post = browser.find_element_by_css_selector(".loadMore .central-meta")
+        text_content = new_post.find_element_by_css_selector(".description")
+        self.assertTrue(text_content.text == INPUT_TEXT)
 
         # There is still a textbox inviting her to add another item.
         # She enters 'Guess who's back?'
+        self.fail("Finish the test!")
 
         # The page updates, and now shows both items
 
