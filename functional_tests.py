@@ -11,6 +11,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_post_in_post_group(self, text_content, index):
+        posts = self.browser.find_elements_by_css_selector(".loadMore .central-meta")
+        post_text_element = posts[index].find_element_by_css_selector(".description")
+        self.assertIn(text_content, post_text_element.text)
+
     def test_can_make_a_text_post(self):
         # Alice checks out the homepage to the hottest social network site
         self.browser.get("http://localhost:8000")
@@ -34,12 +39,7 @@ class NewVisitorTest(unittest.TestCase):
         post_button = self.browser.find_element_by_id("id_post_btn")
         post_button.click()
         time.sleep(1)
-        new_post = self.browser.find_element_by_css_selector(".loadMore .central-meta")
-        text_content = new_post.find_element_by_css_selector(".description")
-        self.assertTrue(
-            text_content.text == INPUT_TEXT, 
-            "new post was not displayed on page"
-        )
+        self.check_for_post_in_post_group(INPUT_TEXT, 0)
 
         # There is still a textbox inviting her to write something.
         # She enters 'Guess who's back?'
@@ -51,9 +51,8 @@ class NewVisitorTest(unittest.TestCase):
 
         # The page updates, and now shows both items
         time.sleep(1)
-        posts = self.browser.find_elements_by_css_selector(".loadMore .central-meta")
-        self.assertIn(INPUT_TEXT, posts[1].text)
-        self.assertIn(INPUT_TEXT2, posts[0].text)
+        self.check_for_post_in_post_group(INPUT_TEXT2, 0)
+        self.check_for_post_in_post_group(INPUT_TEXT, 1)
 
         # Alice wonders wether the site will remember her posts. She sees that
         # the site has generated a unique URL for her -- there is some
