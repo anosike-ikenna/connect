@@ -1,5 +1,6 @@
 from django.urls import resolve
 from django.http import HttpRequest
+from django.template.loader import render_to_string
 from django.test import TestCase
 from . import views
 
@@ -11,9 +12,6 @@ class HomePageTest(TestCase):
         self.assertEqual(found.func, views.home_page)
 
     def test_home_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = views.home_page(request)
-        html = response.content.decode("utf8")
-        self.assertTrue(html.startswith("<html>"))
-        self.assertIn("<title>Connect Social Network</title>", html)
-        self.assertTrue(html.endswith("</html>"))
+        response = self.client.get("/")
+
+        self.assertTemplateUsed(response, "main/index.html")
