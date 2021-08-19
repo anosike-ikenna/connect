@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+
+class TimeLine(models.Model):
+    text = models.TextField(default="")
+    created = models.DateTimeField("date posted", auto_now_add=True)
+    last_modified = models.DateTimeField("modified at", auto_now=True)
