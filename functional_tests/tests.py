@@ -1,4 +1,5 @@
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 import unittest
@@ -7,7 +8,7 @@ import time
 MAX_WAIT = 10
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -87,7 +88,6 @@ class NewVisitorTest(LiveServerTestCase):
         # Nikki visits the home page. There is no sign of Alice's list
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name("body").text
-        time.sleep(10)
         # self.assertNotIn("Hello everybody", page_text)  #*******To be fixed*******#
         # self.assertNotIn("Guess who's back?", page_text)    #**********To be fixed*********#
 
