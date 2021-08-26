@@ -19,6 +19,7 @@ from main import views as main_views
 
 urlpatterns = [
     re_path(r"^$", main_views.home_page, name="home"),
-    re_path(r"^alice-user/timeline/$", main_views.view_timeline, name="view_timeline"),
+    re_path(r"^(?P<id>.+)/timeline/$", main_views.view_timeline, name="view_timeline"),
+    re_path(r"^(?P<id>.+)/timeline/add_post$", main_views.add_post, name="add_post"),
     path('admin/', admin.site.urls),
 ]
