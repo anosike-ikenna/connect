@@ -8,7 +8,7 @@ class TimeLine(models.Model):
 
 
 class Post(models.Model):
-    text = models.TextField(default=True, blank=False)
+    text = models.TextField(default="", blank=False)
     timeline = models.ForeignKey(TimeLine, default=None, on_delete=models.CASCADE)
     created = models.DateTimeField("date posted", auto_now_add=True)
     last_modified = models.DateTimeField("modified at", auto_now=True)
