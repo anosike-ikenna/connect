@@ -134,3 +134,15 @@ class TimeLineViewTest(TestCase):
         )
 
         self.assertRedirects(response, f"/{correct_timeline.id}/timeline/")
+
+    def test_validation_errors_end_up_on_lists_page(self):
+        timeline = TimeLine.objects.create()
+        response = self.client.post(
+            f"/{timeline.id}/timeline/",
+            data={"new_post": ""}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "main/timeline.html")      
+        expected_error = "You can't have an empty post"
+        self.assertEqual(response.context["error"], expected_error)
+        self.assertContains(response, escape(expected_error))
