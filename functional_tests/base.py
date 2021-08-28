@@ -39,3 +39,9 @@ class FunctionalTest(StaticLiveServerTestCase):
                 if time.time() - start_time > MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
+    def get_post_input_box(self):
+        return self.browser.find_element_by_id("id_new_post")
+
+    def get_post_submit_button(self):
+        return self.browser.find_element_by_id("id_post_btn")

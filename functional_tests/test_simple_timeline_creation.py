@@ -13,7 +13,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn("Connect Social Network", self.browser.title)
 
         # she sees a textbox that invites her to 'write something'
-        inputbox = self.browser.find_element_by_id("id_new_post")
+        inputbox = self.get_post_input_box()
         self.assertEqual(
             inputbox.get_attribute("placeholder").lower(), 
             "write something..."
@@ -25,16 +25,16 @@ class NewVisitorTest(FunctionalTest):
 
         # when she hits post, the page updates and now contains
         # 'Hello everybody' and the timestamp
-        post_button = self.browser.find_element_by_id("id_post_btn")
+        post_button = self.get_post_submit_button()
         post_button.click()
         self.check_for_post_in_post_group(INPUT_TEXT, 0)
 
         # There is still a textbox inviting her to write something.
         # She enters 'Guess who's back?'
-        inputbox = self.browser.find_element_by_id("id_new_post")
+        inputbox = self.get_post_input_box()
         INPUT_TEXT2 = "Guess who's back?"
         inputbox.send_keys(INPUT_TEXT2)
-        post_button = self.browser.find_element_by_id("id_post_btn")
+        post_button = self.get_post_submit_button()
         post_button.click()
 
         # The page updates, and now shows both items
@@ -44,9 +44,9 @@ class NewVisitorTest(FunctionalTest):
     def test_multiple_users_can_make_posts_at_different_urls(self):
         # Alice starts a new to-do list
         self.browser.get(self.live_server_url)
-        inputbox = self.browser.find_element_by_id("id_new_post")
+        inputbox = self.get_post_input_box()
         inputbox.send_keys("Hello everybody")
-        post_button = self.browser.find_element_by_id("id_post_btn")
+        post_button = self.get_post_submit_button()
         post_button.click()
         self.check_for_post_in_post_group("Hello everybody", 0)
 
@@ -68,9 +68,9 @@ class NewVisitorTest(FunctionalTest):
         # self.assertNotIn("Guess who's back?", page_text)    #**********To be fixed*********#
 
         # Nikki starts posting to his timeline.
-        inputbox = self.browser.find_element_by_id("id_new_post")
+        inputbox = self.get_post_input_box()
         inputbox.send_keys("The return of ikenna")
-        post_button = self.browser.find_element_by_id("id_post_btn")
+        post_button = self.get_post_submit_button()
         post_button.click()
         self.check_for_post_in_post_group("The return of ikenna", 0)
 
