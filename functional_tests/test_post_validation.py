@@ -17,14 +17,14 @@ class PostValidationTest(FunctionalTest):
         self.wait_for_load(
             lambda: self.assertEqual(
                 self.browser.find_element_by_id("post_error").text.lower(),
-                "you can't submit an empty post"
+                "you can't have an empty post"
             )
         )
 
         # She tries again with some text for the post, which now works
         self.browser.find_element_by_id("id_new_post").send_keys("Hello friend")
         self.browser.find_element_by_id("id_post_btn").click()
-        self.browser.check_for_post_in_post_group("Hello friend", 0)
+        self.check_for_post_in_post_group("Hello friend", 0)
 
 
         # Pervesely, she now decides to submit a second blank list 
@@ -34,12 +34,12 @@ class PostValidationTest(FunctionalTest):
         self.wait_for_load(
             lambda: self.assertEqual(
                 self.browser.find_element_by_id("post_error").text.lower(),
-                "you can't submit an empty post"
+                "you can't have an empty post"
             )
         )
 
         # And she can correct it by filling some text in
         self.browser.find_element_by_id("id_new_post").send_keys("Life sucks")
         self.browser.find_element_by_id("id_post_btn").click()
-        self.browser.check_for_post_in_post_group("Hello friend", 1)
-        self.browser.check_for_post_in_post_group("Life sucks", 0)
+        self.check_for_post_in_post_group("Hello friend", 1)
+        self.check_for_post_in_post_group("Life sucks", 0)

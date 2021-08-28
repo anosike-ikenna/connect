@@ -168,6 +168,9 @@
 														</li>
 													</ul>
 												</div>
+												{% if error %}
+													<p id="post_error" class="custom-error">{{ error }}</p>
+												{% endif %}
 											</form>
 										</div>
 									</div>
