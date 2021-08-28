@@ -203,7 +203,7 @@
 												<img src="/static/main/images/resources/admin2.jpg" alt="">
 											</figure>
 											<div class="newpst-input">
-												<form method="post" action="{% url 'add_post' timeline.id %}">
+												<form method="post" action="{% url 'view_timeline' timeline.id %}">
 													{% csrf_token %}
 													<textarea id="id_new_post" name="new_post" rows="2" placeholder="write something..."></textarea>
 													<div class="attachments">

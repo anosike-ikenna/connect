@@ -20,6 +20,9 @@ def home_page(request):
 
 def view_timeline(request, id):
     timeline = TimeLine.objects.get(id=id)
+    if request.method == "POST":
+        Post.objects.create(text=request.POST["new_post"], timeline=timeline)
+        return redirect(f"/{timeline.id}/timeline/")
     posts = timeline.post_set.order_by("-created")
     return render(
         request, 
@@ -29,8 +32,3 @@ def view_timeline(request, id):
             "timeline": timeline,
         }
     )
-
-def add_post(request, id):
-    timeline = TimeLine.objects.get(id=id)
-    Post.objects.create(text=request.POST["new_post"], timeline=timeline)
-    return redirect(f"/{timeline.id}/timeline/")

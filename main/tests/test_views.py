@@ -110,15 +110,12 @@ class TimeLineViewTest(TestCase):
         response = self.client.get(f"/{correct_timeline.id}/timeline/")
         self.assertEqual(response.context["timeline"], correct_timeline)
 
-
-class NewPostTest(TestCase):
-    
     def test_can_save_a_POST_request_to_an_existing_timeline(self):
         other_timeline = TimeLine.objects.create()
         correct_timeline = TimeLine.objects.create()
 
         self.client.post(
-            f"/{correct_timeline.id}/timeline/add_post",
+            f"/{correct_timeline.id}/timeline/",
             data={"new_post": "A new post for an existing timeline"}
         )
 
@@ -127,12 +124,12 @@ class NewPostTest(TestCase):
         self.assertEqual(new_post.text, "A new post for an existing timeline")
         self.assertEqual(new_post.timeline, correct_timeline)
 
-    def test_redirects_to_list_view(self):
+    def test_POST_redirects_to_list_view(self):
         other_timeline = TimeLine.objects.create()
         correct_timeline = TimeLine.objects.create()
 
         response = self.client.post(
-            f"/{correct_timeline.id}/timeline/add_post",
+            f"/{correct_timeline.id}/timeline/",
             data={"new_post": "A new post for an existing timeline"}
         )
 
