@@ -12,3 +12,7 @@ class PostForm(forms.ModelForm):
         error_messages = {
             "text": {"required": EMPTY_POST_ERROR}
         }
+
+    def save(self, for_timeline):
+        self.instance.timeline = for_timeline
+        return super().save()
