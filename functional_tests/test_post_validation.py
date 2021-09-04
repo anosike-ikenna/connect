@@ -11,34 +11,44 @@ class PostValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
         self.get_post_submit_button().click()
 
-        # The home page refreshes, and there is an error page saying
-        # that a post cannot be blank
+        # The browser intercepts the request, and does not load the
+        # homepage
         self.wait_for_load(
-            lambda: self.assertEqual(
-                self.browser.find_element_by_id("post_error").text.lower(),
-                "you can't have an empty post"
+            lambda: self.browser.find_element_by_css_selector(
+                "#id_new_post:invalid"
             )
         )
 
-        # She tries again with some text for the post, which now works
-        self.get_post_input_box().send_keys("Hello friend")
-        self.get_post_submit_button().click()
-        self.check_for_post_in_post_group("Hello friend", 0)
-
-
-        # Pervesely, she now decides to submit a second blank list 
-        self.get_post_submit_button().click()
-
-        # She recieves a similar warning on the list page
+        # She starts typing some text for the new item and the error dissapears
+        self.get_post_input_box().send_keys("Hello my gee")
         self.wait_for_load(
-            lambda: self.assertEqual(
-                self.browser.find_element_by_id("post_error").text.lower(),
-                "you can't have an empty post"
+            lambda: self.browser.find_element_by_css_selector(
+                "#id_new_post:valid"
+            )
+        )
+
+        # And she can submit it successfully
+        self.get_post_submit_button().click()
+        self.check_for_post_in_post_group("Hello my gee", 0)
+
+        # Perversely, she now decides to submit a second blank list item
+        self.get_post_submit_button().click()
+
+        # Again, the browser will not comply
+        self.check_for_post_in_post_group("Hello my gee", 0)
+        self.wait_for_load(
+            lambda: self.browser.find_element_by_css_selector(
+                "#id_new_post:invalid"
             )
         )
 
         # And she can correct it by filling some text in
-        self.get_post_input_box().send_keys("Life sucks")
+        self.get_post_input_box().send_keys("What's going on")
+        self.wait_for_load(
+            lambda: self.browser.find_element_by_css_selector(
+                "#id_new_post:valid"
+            )
+        )
         self.get_post_submit_button().click()
-        self.check_for_post_in_post_group("Hello friend", 1)
-        self.check_for_post_in_post_group("Life sucks", 0)
+        self.check_for_post_in_post_group("Hello my gee", 1)
+        self.check_for_post_in_post_group("What's going on", 0)

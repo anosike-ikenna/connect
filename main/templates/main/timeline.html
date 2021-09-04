@@ -205,7 +205,7 @@
 											<div class="newpst-input">
 												<form method="post" action="{% url 'view_timeline' timeline.id %}">
 													{% csrf_token %}
-													<textarea id="id_new_post" name="new_post" rows="2" placeholder="write something..."></textarea>
+													<textarea id="id_new_post" name="text" rows="2" placeholder="write something..." required></textarea>
 													<div class="attachments">
 														<ul>
 															<li>
@@ -237,8 +237,10 @@
 															</li>
 														</ul>
 													</div>
-													{% if error %}
-													<p id="post_error" class="custom-error">{{ error }}</p>
+													{% if form.text.errors %}
+													{% for error in form.text.errors %}
+														<p id="post_error" class="custom-error">{{ error }}</p>
+													{% endfor %}
 													{% endif %}
 												</form>
 											</div>

@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils.html import escape
 from .. import views
 from ..models import TimeLine, Post
+from ..forms import EMPTY_POST_ERROR, PostForm
 
 
 class HomePageTest(TestCase):
@@ -19,7 +20,7 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "main/index.html")
 
     def test_can_save_a_POST_request(self):
-        response = self.client.post("/", data={"new_post": "A new post item"})
+        response = self.client.post("/", data={"text": "A new post item"})
 
         self.assertEqual(TimeLine.objects.count(), 1)
         new_post = Post.objects.first()
@@ -68,18 +69,23 @@ class NewTimeLineTest(TestCase):
         response = self.client.get(f"/{timeline.id}/timeline/")
         self.assertContains(response, "oops! Your timeline is currently empty")
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
-        response = self.client.post("/", data={"new_post": ""})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "main/index.html")
-        expected_error = "You can't have an empty post"
-        self.assertEqual(response.context["error"], expected_error)
-        self.assertContains(response, escape(expected_error))
-
     def test_invalid_post_items_arent_saved(self):
-        self.client.post("/", data={"new_post": ""})
+        self.client.post("/", data={"text": ""})
         self.assertEqual(TimeLine.objects.count(), 0)
         self.assertEqual(Post.objects.count(), 0)
+
+    def test_invalid_post_input_renders_home_template(self):
+        response = self.client.post("/", data={"text": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "main/index.html")
+
+    def test_validation_errors_are_shown_on_home_page(self):
+        response = self.client.post("/", data={"text": ""})
+        self.assertContains(response, escape(EMPTY_POST_ERROR))
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        response = self.client.post("/", data={"text": ""})
+        self.assertIsInstance(response.context["form"], PostForm)
 
 
 class TimeLineViewTest(TestCase):
@@ -116,7 +122,7 @@ class TimeLineViewTest(TestCase):
 
         self.client.post(
             f"/{correct_timeline.id}/timeline/",
-            data={"new_post": "A new post for an existing timeline"}
+            data={"text": "A new post for an existing timeline"}
         )
 
         self.assertEqual(Post.objects.count(), 1)
@@ -130,19 +136,31 @@ class TimeLineViewTest(TestCase):
 
         response = self.client.post(
             f"/{correct_timeline.id}/timeline/",
-            data={"new_post": "A new post for an existing timeline"}
+            data={"text": "A new post for an existing timeline"}
         )
 
         self.assertRedirects(response, f"/{correct_timeline.id}/timeline/")
 
-    def test_validation_errors_end_up_on_lists_page(self):
+    def post_invalid_input(self):
         timeline = TimeLine.objects.create()
-        response = self.client.post(
+        return self.client.post(
             f"/{timeline.id}/timeline/",
-            data={"new_post": ""}
+            data={"text": ""}
         )
+
+    def test_for_invalid_input_nothing_saved_to_db(self):
+        self.post_invalid_input()
+        self.assertEqual(Post.objects.count(), 0)
+
+    def test_for_invalid_input_renders_list_template(self):
+        response = self.post_invalid_input()
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "main/timeline.html")      
-        expected_error = "You can't have an empty post"
-        self.assertEqual(response.context["error"], expected_error)
-        self.assertContains(response, escape(expected_error))
+        self.assertTemplateUsed(response, "main/timeline.html")
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        response = self.post_invalid_input()
+        self.assertIsInstance(response.context["form"], PostForm)
+
+    def test_for_invalid_input_shows_error_on_page(self):
+        response = self.post_invalid_input()
+        self.assertContains(response, escape(EMPTY_POST_ERROR))
