@@ -2400,6 +2400,10 @@ footer .logo {
 
 /*--- toogle switch button ---*/
 
+.setting-area {
+    margin-top: 10px;
+}
+
 .setting-row input {
     display: none;
 }
