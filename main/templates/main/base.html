@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="/static/main/css/style.css">
         <link rel="stylesheet" href="/static/main/css/color.css">
         <link rel="stylesheet" href="/static/main/css/responsive.css">
+        <link rel="stylesheet" href="/static/main/css/custom.css">
         {% block extra_css %}
         {% endblock %}
         <style>
@@ -209,7 +210,7 @@
                         </li>
                     </ul>
                     <ul class="setting-area">
-                        <li>
+                        <li style="margin-top: 25px;">
                             <a href="#" title="Home" data-ripple=""><i class="ti-search"></i></a>
                             <div class="searched">
                                 <form method="post" class="form-search">
@@ -218,6 +219,7 @@
                                 </form>
                             </div>
                         </li>
+                        {% if user.is_authenticated %}
                         <li><a href="newsfeed.html" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
                         <li>
                             <a href="#" title="Notification" data-ripple="">
@@ -350,7 +352,9 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="user-img">
+                    {% endif %}
+                    <div class="user-img" id="auth-sec">
+                        {% if user.is_authenticated %}
                         <img src="/static/main/images/resources/admin.jpg" alt="">
                         <span class="status f-online"></span>
                         <div class="user-setting">
@@ -363,6 +367,14 @@
                             <a href="#" title=""><i class="ti-settings"></i>account setting</a>
                             <a href="#" title=""><i class="ti-power-off"></i>log out</a>
                         </div>
+                        {% else %}
+                        <img src="/static/main/images/resources/admin.jpg" alt="">
+                        <span class="status f-offline"></span>
+                            <div class="user-setting" id="user-setting">
+                                <a href="#" title="" id="login-link">log in</a>
+                                <a href="#" title="" id="signup-link">Sign up</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
