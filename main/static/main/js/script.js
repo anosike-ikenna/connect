@@ -294,16 +294,15 @@ $(function() {
 
 	  
 // login & register form
-	$('button.signup').on("click", function(){
-		$('.login-reg-bg').addClass('show');
-		return false;
-	  });
-	  
 	  $('.already-have').on("click", function(){
 		$('.login-reg-bg').removeClass('show');
 		return false;
 	  });
 	
+	$('.no-acct').on("click", function() {
+		$(".login-reg-bg").addClass("show");
+		return false;
+	})
 //----- count down timer		
 	if ($.isFunction($.fn.downCount)) {
 		$('.countdown').downCount({

@@ -1,3 +1,26 @@
 .error {
     color: #ff0000 !important;
 }
+
+.base-django-msg-success {
+    background-color: #38bff1;
+}
+
+.base-django-msg-warning {
+    background-color: #f14742;
+}
+
+#base-django-msg {
+    border:0px solid #fff;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+    border-radius:2px;
+    margin-bottom: -20px;
+}
+
+#base-django-msg p {
+    color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 60px;
+    padding-bottom: 5px;
+}

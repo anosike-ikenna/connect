@@ -372,7 +372,7 @@
                         <span class="status f-offline"></span>
                             <div class="user-setting" id="user-setting">
                                 <a href="#" title="" id="login-link">log in</a>
-                                <a href="#" title="" id="signup-link">Sign up</a>
+                                <a href="{% url 'signup' %}" title="" id="signup-link">Sign up</a>
                             </div>
                         {% endif %}
                     </div>
@@ -380,6 +380,20 @@
             </div>
             <!-- topbar -->
         </div>
+        {% endblock %}
+
+        {% block django_messages %}
+        {% if messages %}
+            <div id="base-django-msg">
+                {% for message in messages %}
+                    {% if message.level_tag == "success" %}
+                        <p class="base-django-msg-success">{{ message }}</p>
+                    {% else %}
+                        <p class="base-django-msg-warning">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
         {% endblock %}
 
         {% block content %} 
@@ -466,6 +480,14 @@
 	    <script src="/static/main/js/script.js"></script>
 	    <script src="/static/main/js/map-init.js"></script>
 	    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+        <script>
+            var userAuthLinks = document.querySelectorAll("#user-setting a");
+            for (let link of userAuthLinks) {
+                link.addEventListener("click", (e) => {
+                    location.href = e.target.getAttribute("href");
+                })
+            }
+        </script>
         {% block extra_js %}
         {% endblock %}
     </body>

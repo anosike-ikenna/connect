@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'user.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,9 @@ DATABASES = {
     }
 }
 
+# Authentication
+AUTH_USER_MODEL = "user.User"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -121,6 +125,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR.parent / "static"
+
+# The number of days a login token is valid for
+PASSWORD_RESET_TIMEOUT = 20
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
