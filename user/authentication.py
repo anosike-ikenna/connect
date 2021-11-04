@@ -1,4 +1,5 @@
 from user.models import User, Token
+from . import utils
 
 
 class PasswordlessAuthenticationBackend:
@@ -6,6 +7,9 @@ class PasswordlessAuthenticationBackend:
     def authenticate(self, request, uid):
         try:
             token = Token.objects.get(uid=uid)
+            if utils.get_custom_datetime() > token.expires:
+                token.delete()
+                return None
             return User.objects.get(email=token.email)
         except Token.DoesNotExist:
             return None

@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/static/main/css/style.css">
     <link rel="stylesheet" href="/static/main/css/color.css">
     <link rel="stylesheet" href="/static/main/css/responsive.css">
-	<link rel="stylesheet" href="/static/main/css/custom.css">
 </head>
 <body>
 <!--<div class="se-pre-con"></div>-->
@@ -34,14 +33,14 @@
 				</div>
 			</div> -->
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="login-reg-bg show">
+				<div class="login-reg-bg">
 					<div class="log-reg-area sign">
 						<h2 class="log-title">Login</h2>
 							<p>
 								Don’t use Connect Yet? <a href="#" class="no-acct" title="">Join now</a>
 							</p>
 							{% if error %}
-								<p class="error">
+								<p class="error" style="color: red;">
 									{{ error }}
 								</p>
 							{% endif %}
@@ -53,7 +52,7 @@
 							</div>
 							<div class="checkbox">
 							  <label>
-								<input type="checkbox" checked="checked"/><i class="check-box"></i>Always Remember Me.
+								<input type="checkbox" checked="checked" name="remember-me" /><i class="check-box"></i>Always Remember Me.
 							  </label>
 							</div>
 							<div class="submit-btns">
@@ -64,7 +63,7 @@
 					<div class="log-reg-area reg">
 						<h2 class="log-title">Register</h2>
 						{% if error %}
-							<p class="error">
+							<p class="error" style="color: red;">
 								{{ error }}
 							</p>
 						{% endif %}

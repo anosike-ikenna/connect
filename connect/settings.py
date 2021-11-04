@@ -84,6 +84,9 @@ DATABASES = {
 
 # Authentication
 AUTH_USER_MODEL = "user.User"
+AUTHENTICATION_BACKENDS = [
+    "user.authentication.PasswordlessAuthenticationBackend",
+]
 
 
 # Password validation
@@ -127,7 +130,25 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR.parent / "static"
 
 # The number of days a login token is valid for
-PASSWORD_RESET_TIMEOUT = 20
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 24   # valid for a day
+
+# Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        'console': {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler"
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+        },
+    },
+    "root": {"level": "DEBUG"}
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

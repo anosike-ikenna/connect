@@ -219,9 +219,9 @@
                                 </form>
                             </div>
                         </li>
-                        {% if user.is_authenticated %}
+                        {% if user.email %}
                         <li><a href="newsfeed.html" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
-                        <li>
+                        <li id="user-noti">
                             <a href="#" title="Notification" data-ripple="">
                                 <i class="ti-bell"></i><span>20</span>
                             </a>
@@ -287,7 +287,7 @@
                                 <a href="notifications.html" title="" class="more-mesg">view more</a>
                             </div>
                         </li>
-                        <li>
+                        <li id="user-msgs">
                             <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span>12</span></a>
                             <div class="dropdowns">
                                 <span>5 New Messages</span>
@@ -354,7 +354,7 @@
                     </ul>
                     {% endif %}
                     <div class="user-img" id="auth-sec">
-                        {% if user.is_authenticated %}
+                        {% if user.email %}
                         <img src="/static/main/images/resources/admin.jpg" alt="">
                         <span class="status f-online"></span>
                         <div class="user-setting">
@@ -365,13 +365,13 @@
                             <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
                             <a href="#" title=""><i class="ti-target"></i>activity log</a>
                             <a href="#" title=""><i class="ti-settings"></i>account setting</a>
-                            <a href="#" title=""><i class="ti-power-off"></i>log out</a>
+                            <a href="#" title=""><i class="ti-power-off" id="logout-link"></i>log out</a>
                         </div>
                         {% else %}
                         <img src="/static/main/images/resources/admin.jpg" alt="">
                         <span class="status f-offline"></span>
                             <div class="user-setting" id="user-setting">
-                                <a href="#" title="" id="login-link">log in</a>
+                                <a href="{% url 'pre_login' %}" title="" id="login-link">log in</a>
                                 <a href="{% url 'signup' %}" title="" id="signup-link">Sign up</a>
                             </div>
                         {% endif %}

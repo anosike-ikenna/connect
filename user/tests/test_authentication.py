@@ -1,8 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
-from user.authentication import PasswordlessAuthenticationBackend
+from django.conf import settings
+from django.utils import timezone
+from user.authentication import PasswordlessAuthenticationBackend, utils
 from user.models import Token
+from unittest import skip
+from unittest.mock import patch
+import datetime
 
 User = get_user_model()
 
@@ -15,11 +20,53 @@ class AuthenticateTest(TestCase):
             "invalid-token"
         )
         self.assertIsNone(result)
+
+    @patch("user.utils.get_custom_datetime")
+    def test_returns_None_if_token_is_expired(self, mock_utils_datetime):
+        username = "alice"
+        email = "alice@test.com"
+        token = Token.objects.create(email=email, username=username)
+        token.expires = token.created + datetime.timedelta(
+            seconds=settings.PASSWORD_RESET_TIMEOUT
+        )
+        token.save()
+        mock_utils_datetime.return_value = token.expires + datetime.timedelta(seconds=1)
+        result = PasswordlessAuthenticationBackend().authenticate(
+            HttpRequest(),
+            token.uid
+        )
+        self.assertIsNone(result)
+
+    @patch("user.utils.get_custom_datetime")
+    def test_deletes_token_if_is_expired(self, mock_utils_datetime):
+        username = "alice"
+        email = "alice@test.com"
+        token = Token.objects.create(email=email, username=username)
+        token.expires = token.created + datetime.timedelta(
+            seconds=settings.PASSWORD_RESET_TIMEOUT
+        )
+        token.save()
+        self.assertEqual(str(token.uid), str(Token.objects.first().uid))
+        self.assertEqual(Token.objects.count(), 1)
+
+        mock_utils_datetime.return_value = token.expires + datetime.timedelta(seconds=1)
+        result = PasswordlessAuthenticationBackend().authenticate(
+            HttpRequest(),
+            token.uid
+        )
+
+        self.assertIsNone(result)
+        self.assertEqual(Token.objects.count(), 0)
+
     
     def test_returns_new_user_with_correct_email_if_token_exists(self):
         email = "alice@test.com"
         username = "alice"
         token = Token.objects.create(email=email, username=username)
+        token.expires = token.created + datetime.timedelta(
+            seconds=settings.PASSWORD_RESET_TIMEOUT
+        )
+        token.save()
         user = PasswordlessAuthenticationBackend().authenticate(
             HttpRequest(),
             token.uid
@@ -32,6 +79,10 @@ class AuthenticateTest(TestCase):
         username = "alice"
         existing_user = User.objects.create(email=email, username=username)
         token = Token.objects.create(email=email, username=username)
+        token.expires = token.created + datetime.timedelta(
+            seconds=settings.PASSWORD_RESET_TIMEOUT
+        )
+        token.save()
         user = PasswordlessAuthenticationBackend().authenticate(
             HttpRequest(),
             token.uid
