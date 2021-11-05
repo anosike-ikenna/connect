@@ -150,6 +150,7 @@ class SignupTest(FunctionalTest):
         # She clicks on the dropdown in the user section once again
         # she notices there is no longer signup and login buttons
         # But a logout button is now on display
+        # She is logged in
         self.browser.find_element_by_css_selector("#auth-sec").click()
         self.assertTrue(
             self.wait_for_load(
@@ -159,3 +160,14 @@ class SignupTest(FunctionalTest):
         for id in ["signup-link", "login-link"]:
             with self.assertRaises(NoSuchElementException):
                 self.browser.find_element_by_id(id)
+
+        # She logs out
+        self.browser.find_element_by_id("logout-link").click()
+
+        # She is logged out
+        self.browser.find_element_by_css_selector("#auth-sec").click()
+        with self.assertRaises(NoSuchElementException):
+            self.wait_for_load(
+                lambda: self.browser.find_element_by_id("logout-link")
+            )
+        self.browser.find_element_by_css_selector("#login-link")
