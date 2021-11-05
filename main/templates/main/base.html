@@ -210,7 +210,11 @@
                         </li>
                     </ul>
                     <ul class="setting-area">
+                        {% if not user.email %}
                         <li style="margin-top: 25px;">
+                        {% else %}
+                        <li>
+                        {% endif %}
                             <a href="#" title="Home" data-ripple=""><i class="ti-search"></i></a>
                             <div class="searched">
                                 <form method="post" class="form-search">
@@ -365,7 +369,7 @@
                             <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
                             <a href="#" title=""><i class="ti-target"></i>activity log</a>
                             <a href="#" title=""><i class="ti-settings"></i>account setting</a>
-                            <a href="#" title=""><i class="ti-power-off" id="logout-link"></i>log out</a>
+                            <a href="{% url 'logout' %}" title="" id="logout-link"><i class="ti-power-off"></i>log out</a>
                         </div>
                         {% else %}
                         <img src="/static/main/images/resources/admin.jpg" alt="">
@@ -481,7 +485,7 @@
 	    <script src="/static/main/js/map-init.js"></script>
 	    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
         <script>
-            var userAuthLinks = document.querySelectorAll("#user-setting a");
+            var userAuthLinks = document.querySelectorAll("#auth-sec a");
             for (let link of userAuthLinks) {
                 link.addEventListener("click", (e) => {
                     location.href = e.target.getAttribute("href");
