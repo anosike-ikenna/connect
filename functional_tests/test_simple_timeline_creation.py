@@ -44,11 +44,7 @@ class NewVisitorTest(FunctionalTest):
     def test_multiple_users_can_make_posts_at_different_urls(self):
         # Alice starts a new to-do list
         self.browser.get(self.live_server_url)
-        inputbox = self.get_post_input_box()
-        inputbox.send_keys("Hello everybody")
-        post_button = self.get_post_submit_button()
-        post_button.click()
-        self.check_for_post_in_post_group("Hello everybody", 0)
+        self.add_timeline_post("hello everybody")
 
         # she notices that her timeline has a unique URL
         alice_timeline_url = self.browser.current_url
@@ -68,11 +64,7 @@ class NewVisitorTest(FunctionalTest):
         # self.assertNotIn("Guess who's back?", page_text)    #**********To be fixed*********#
 
         # Nikki starts posting to his timeline.
-        inputbox = self.get_post_input_box()
-        inputbox.send_keys("The return of ikenna")
-        post_button = self.get_post_submit_button()
-        post_button.click()
-        self.check_for_post_in_post_group("The return of ikenna", 0)
+        self.add_timeline_post("the return of ikenna")
 
         # Nikki gets his own unique URL
         nikki_timeline_url = self.browser.current_url

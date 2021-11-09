@@ -1,6 +1,7 @@
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 import unittest
 from unittest import skip
@@ -30,15 +31,21 @@ class FunctionalTest(StaticLiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
+    def wait(fn):
+        def modified_fn(*args, **kwargs):
+            start_time = time.time()
+            while True:
+                try:
+                    return fn(*args, **kwargs)
+                except (AssertionError, WebDriverException) as e:
+                    if time.time() - start_time > MAX_WAIT:
+                        raise e
+                    time.sleep(0.5)
+        return modified_fn
+
+    @wait
     def wait_for_load(self, fn):
-        start_time = time.time()
-        while True:
-            try:
-                return fn()
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > MAX_WAIT:
-                    raise e
-                time.sleep(0.5)
+        return fn()
 
     def get_post_input_box(self):
         return self.browser.find_element_by_id("id_new_post")
@@ -68,3 +75,8 @@ class FunctionalTest(StaticLiveServerTestCase):
                 lambda: self.browser.find_element_by_id("logout-link")
             )
         self.browser.find_element_by_css_selector("#login-link")
+
+    def add_timeline_post(self, post_text):
+        self.get_post_input_box().send_keys(post_text)
+        self.get_post_submit_button().click()
+        self.check_for_post_in_post_group(post_text, 0)
