@@ -1,5 +1,8 @@
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.conf import settings
+from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
+from django.contrib.sessions.backends.db import SessionStore
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
@@ -7,6 +10,7 @@ import unittest
 from unittest import skip
 import time
 
+User = get_user_model()
 MAX_WAIT = 10
 
 
@@ -17,6 +21,21 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def tearDown(self):
         self.browser.quit()
+
+    def create_pre_authenticated_session(self, email, username):
+        user = User.objects.create(email=email, username=username)
+        session = SessionStore()
+        session[SESSION_KEY] = user.pk
+        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
+        session.create()
+        ## To set a cookie we need to first visit the domain.
+        ## 404 pages load the quickest!
+        self.browser.get(self.live_server_url + "/404/")
+        self.browser.add_cookie(dict(
+            name=settings.SESSION_COOKIE_NAME,
+            value=session.session_key,
+            path="/"
+        ))
 
     def check_for_post_in_post_group(self, text_content, index):
         start_time = time.time()

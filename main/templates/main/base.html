@@ -57,7 +57,7 @@
                             </ul>
                         </li>
                         <li><span>Time Line</span>
-                            <ul>
+                            <!-- <ul>
                                 <li><a href="time-line.html" title="">timeline</a></li>
                                 <li><a href="timeline-friends.html" title="">timeline friends</a></li>
                                 <li><a href="timeline-groups.html" title="">timeline groups</a></li>
@@ -70,7 +70,7 @@
                                 <li><a href="people-nearby.html" title="">people nearby</a></li>
                                 
                                 
-                            </ul>
+                            </ul> -->
                         </li>
                         <li><span>Account Setting</span>
                             <ul>
@@ -167,9 +167,10 @@
                                 <li><a href="newsfeed.html" title="">news feed</a></li>
                             </ul>
                         </li>
+                        {% if user.email %}
                         <li>
-                            <a href="#" title="">timeline</a>
-                            <ul>
+                            <a href="{% url 'view_timeline' %}" title="" id="timeline-link">timeline</a>
+                            <!-- <ul>
                                 <li><a href="time-line.html" title="">timeline</a></li>
                                 <li><a href="timeline-friends.html" title="">timeline friends</a></li>
                                 <li><a href="timeline-groups.html" title="">timeline groups</a></li>
@@ -180,8 +181,9 @@
                                 <li><a href="groups.html" title="">groups page</a></li>
                                 <li><a href="page-likers.html" title="">Likes page</a></li>
                                 <li><a href="people-nearby.html" title="">people nearby</a></li>
-                            </ul>
+                            </ul> -->
                         </li>
+                        {% endif %}
                         <li>
                             <a href="#" title="">account settings</a>
                             <ul>

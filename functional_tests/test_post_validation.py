@@ -6,8 +6,11 @@ import time
 class PostValidationTest(FunctionalTest):
     
     def test_cannot_add_empty_list_items(self):
+        email = "alice@test.com"
+        username = "alice"
         # Alice goes to the home page and accidentally tries to submit
         # an empty post. She hits enter on the empty input box.
+        self.create_pre_authenticated_session(email=email, username=username)
         self.browser.get(self.live_server_url)
         self.get_post_submit_button().click()
 

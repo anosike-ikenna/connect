@@ -8,22 +8,22 @@ def home_page(request):
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
-            timeline = TimeLine.objects.create()
+            timeline = TimeLine.objects.create(user=request.user)
             form.save(for_timeline=timeline)
-            return redirect(f"/{timeline.id}/timeline/")
+            return redirect(f"/timeline/")
         else:
             return render(request, "main/index.html", {"form": form})
     posts = Post.objects.order_by("-created")
     return render(request, "main/index.html", {"posts": posts})
 
-def view_timeline(request, id):
-    timeline = TimeLine.objects.get(id=id)
+def view_timeline(request):
+    timeline = TimeLine.objects.get(user=request.user)
     form = PostForm()
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
             form.save(for_timeline=timeline)
-            return redirect(f"/{timeline.id}/timeline/")
+            return redirect(f"/timeline/")
     posts = timeline.post_set.order_by("-created")
     return render(
         request, 

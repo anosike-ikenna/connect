@@ -128,6 +128,7 @@
 							</div>
 							<!-- sidebar -->
 							<div class="col-lg-6">
+								{% if user.email %}
 								<div class="central-meta">
 									<div class="new-postbox">
 										<figure>
@@ -177,6 +178,7 @@
 										</div>
 									</div>
 								</div><!-- add post new box -->
+								{% endif %}
 								<div class="loadMore">
 								{% for post in posts %}
 									<div class="central-meta item">

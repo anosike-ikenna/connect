@@ -197,13 +197,14 @@
 							<!-- sidebar -->
 							<div class="col-lg-6">
 								<!-- <div class="loadMore"> -->
+									{% if user.email %}
 									<div class="central-meta item">
 										<div class="new-postbox">
 											<figure>
 												<img src="/static/main/images/resources/admin2.jpg" alt="">
 											</figure>
 											<div class="newpst-input">
-												<form method="post" action="{% url 'view_timeline' timeline.id %}">
+												<form method="post" action="{% url 'view_timeline' %}">
 													{% csrf_token %}
 													<textarea id="id_new_post" name="text" rows="2" placeholder="write something..." required></textarea>
 													<div class="attachments">
@@ -246,6 +247,7 @@
 											</div>
 										</div>
 									</div><!-- add post new box -->
+									{% endif %}
 									<div class="loadMore">
 									{% for post in posts %}
 										<div class="central-meta item">

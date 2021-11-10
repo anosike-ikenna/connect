@@ -1,3 +1,4 @@
+from django.conf import settings
 from .base import FunctionalTest
 from selenium import webdriver
 import time
@@ -6,7 +7,10 @@ import time
 class NewVisitorTest(FunctionalTest):
 
     def test_can_make_a_text_post_for_one_user(self):
+        email = "alice@test.com"
+        username = "alice"
         # Alice checks out the homepage to the hottest social network site
+        self.create_pre_authenticated_session(email=email, username=username)
         self.browser.get(self.live_server_url)
 
         # She notices the sleek page title contains the site name
@@ -41,14 +45,18 @@ class NewVisitorTest(FunctionalTest):
         self.check_for_post_in_post_group(INPUT_TEXT2, 0)
         self.check_for_post_in_post_group(INPUT_TEXT, 1)
 
-    def test_multiple_users_can_make_posts_at_different_urls(self):
+    def test_multiple_users_can_make_posts_at_same_url(self):
         # Alice starts a new to-do list
+        email1, username1 = "alice@test.com", "alice"
+        email2, username2 = "nikki@test.com", "nikki"
+
+        self.create_pre_authenticated_session(email=email1, username=username1)
         self.browser.get(self.live_server_url)
         self.add_timeline_post("hello everybody")
 
-        # she notices that her timeline has a unique URL
-        alice_timeline_url = self.browser.current_url
-        self.assertRegex(alice_timeline_url, "/.+/timeline/")
+        # she has her own unique session id
+        alice_session_id = self.browser.get_cookie(settings.SESSION_COOKIE_NAME)["value"]
+        self.assertIsNotNone(alice_session_id)
 
         # Now a new user, Nikki, comes along to the site.
 
@@ -58,6 +66,7 @@ class NewVisitorTest(FunctionalTest):
         self.browser = webdriver.Firefox()
 
         # Nikki visits the home page. There is no sign of Alice's list
+        self.create_pre_authenticated_session(email=email2, username=username2)
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name("body").text
         # self.assertNotIn("Hello everybody", page_text)  #*******To be fixed*******#
@@ -66,10 +75,10 @@ class NewVisitorTest(FunctionalTest):
         # Nikki starts posting to his timeline.
         self.add_timeline_post("the return of ikenna")
 
-        # Nikki gets his own unique URL
-        nikki_timeline_url = self.browser.current_url
-        self.assertRegex(nikki_timeline_url, "/.+/timeline/")
-        self.assertNotEqual(nikki_timeline_url, alice_timeline_url)
+        # Nikki gets his own unique session id
+        nikki_session_id = self.browser.get_cookie(settings.SESSION_COOKIE_NAME)["value"]
+        self.assertIsNotNone(nikki_session_id)
+        self.assertNotEqual(nikki_session_id, alice_session_id)
         
         # Again there is no trace of Alice's list
         page_text = self.browser.find_element_by_tag_name("body").text

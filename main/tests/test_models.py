@@ -1,12 +1,25 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 from ..models import TimeLine, Post
+
+User = get_user_model()
 
 
 class TimeLineAndPostModelTest(TestCase):
 
+    def test_timeline_can_have_models(self):
+        username = "alice"
+        email = "alice@test.com"
+        user = User.objects.create(username=username, email=email)
+        timeline = TimeLine.objects.create(user=user)
+        self.assertEqual(timeline, user.timeline)
+
     def test_saving_and_retrieving_posts(self):
-        timeline = TimeLine()
+        username = "alice"
+        email = "alice@test.com"
+        user = User.objects.create(username=username, email=email)
+        timeline = TimeLine(user=user)
         timeline.save()
 
         first_post = Post()
@@ -33,7 +46,10 @@ class TimeLineAndPostModelTest(TestCase):
         self.assertEqual(second_saved_post.timeline, timeline)
 
     def test_cannot_save_empty_post_items(self):
-        timeline = TimeLine.objects.create()
+        username = "alice"
+        email = "alice@test.com"
+        user = User.objects.create(username=username, email=email)
+        timeline = TimeLine.objects.create(user=user)
         post = Post(text="", timeline=timeline)
         with self.assertRaises(ValidationError):
             post.full_clean()

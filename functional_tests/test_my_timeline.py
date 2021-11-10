@@ -9,28 +9,30 @@ User = get_user_model()
 
 class MyTimeLineTest(FunctionalTest):
 
-    def create_pre_authenticated_session(self, email, username):
-        user = User.objects.create(email=email, username=username)
-        session = SessionStore()
-        session[SESSION_KEY] = user.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session.create()
-        ## To set a cookie we need to first visit the domain.
-        ## 404 pages load the quickest!
-        self.browser.get(self.live_server_url + "/404/")
-        self.browser.add_cookie(dict(
-            name=settings.SESSION_COOKIE_NAME,
-            value=session.session_key,
-            path="/"
-        ))
-
     def test_logged_in_users_timelines_are_saved_as_my_timelines(self):
         email = "alice@test.com"
         username = "alice"
-        self.browser.get(self.live_server_url)
-        self.wait_to_be_logged_out(email, username)
 
         # Alice is a logged-in user
         self.create_pre_authenticated_session(email, username)
         self.browser.get(self.live_server_url)
-        self.wait_to_be_logged_in(email, username)
+        self.add_timeline_post("my very first post")
+        self.add_timeline_post("my second post")
+        feeds_url = self.browser.current_url
+
+        # She notices a "Timeline" link for the first time
+        self.browser.find_element_by_id("timeline-link").click()
+
+        # She sees that her timeline is there, with each post
+        # from newest to oldest
+        self.wait_for_load(
+            lambda: self.check_for_post_in_post_group("my second post", 0)
+        )
+        self.check_for_post_in_post_group("my very first post", 1)
+
+        # She logs out. The 'timeline' option dissapears
+        self.browser.find_element_by_css_selector("#auth-sec").click()
+        self.wait_for_load(
+            lambda: self.browser.find_element_by_id("logout-link")
+        ).click()
+        time.sleep(5)
