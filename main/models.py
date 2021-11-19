@@ -10,6 +10,9 @@ class TimeLine(models.Model):
     created = models.DateTimeField("date posted", auto_now_add=True)
     last_modified = models.DateTimeField("modified at", auto_now=True)
 
+    def get_absolute_url(self):
+        return reverse("view_timeline")
+
 
 class Post(models.Model):
     text = models.TextField()

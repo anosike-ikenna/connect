@@ -28,3 +28,9 @@
 .setting-area li {
     margin-top: 15px;
 }
+
+#file-upload-view {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #0000ff;
+}

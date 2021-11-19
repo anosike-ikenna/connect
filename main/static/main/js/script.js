@@ -395,9 +395,11 @@ jQuery(".post-comt-box textarea").on("keydown", function(event) {
 		$(this).parent().toggleClass('active');
 		return false;
 	});	
+
+	// File upload handler
+	let fileHandler = new FileHandler("#file-upload", "#file-name", ["image/jpeg", "image/png"]);
+	fileHandler.processFile();
 	
-
-
 });//document ready end
 
 

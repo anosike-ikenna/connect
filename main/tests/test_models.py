@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from ..models import TimeLine, Post
 
 User = get_user_model()
@@ -54,3 +55,13 @@ class TimeLineAndPostModelTest(TestCase):
         with self.assertRaises(ValidationError):
             post.full_clean()
             post.save()
+
+    def test_get_absolute_url(self):
+        username = "alice"
+        email = "alice@test.com"
+        user = User.objects.create(username=username, email=email)
+        timeline = TimeLine.objects.create(user=user)
+
+        response = timeline.get_absolute_url()
+        
+        self.assertEqual(reverse("view_timeline"), response)

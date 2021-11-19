@@ -1,0 +1,24 @@
+    {% csrf_token %}
+    <p id="file-upload-view">
+        <a id="file-name" class="strip" href="" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
+        </a>
+    </p>
+    <textarea id="id_new_post" name="text" rows="2" placeholder="write something..." required></textarea>
+    <div class="attachments">
+        <ul>
+            <li>
+                <i class="fa fa-image"></i>
+                <label class="fileContainer">
+                    <input id="file-upload" type="file" name="post_image">
+                </label>
+            </li>
+            <li>
+                <button id="id_post_btn" type="submit">Post</button>
+            </li>
+        </ul>
+    </div>
+    {% if form.text.errors %}
+    {% for error in form.text.errors %}
+        <p id="post_error" class="custom-error">{{ error }}</p>
+    {% endfor %}
+    {% endif %}

@@ -135,45 +135,8 @@
 											<img src="/static/main/images/resources/admin2.jpg" alt="">
 										</figure>
 										<div class="newpst-input">
-											<form method="post" action="/">
-												{% csrf_token %}
-												<textarea id="id_new_post" name="text" rows="2" placeholder="write something..." required></textarea>
-												<div class="attachments">
-													<ul>
-														<li>
-															<i class="fa fa-music"></i>
-															<label class="fileContainer">
-																<input type="file">
-															</label>
-														</li>
-														<li>
-															<i class="fa fa-image"></i>
-															<label class="fileContainer">
-																<input type="file">
-															</label>
-														</li>
-														<li>
-															<i class="fa fa-video-camera"></i>
-															<label class="fileContainer">
-																<input type="file">
-															</label>
-														</li>
-														<li>
-															<i class="fa fa-camera"></i>
-															<label class="fileContainer">
-																<input type="file">
-															</label>
-														</li>
-														<li>
-															<button id="id_post_btn" type="submit">Post</button>
-														</li>
-													</ul>
-												</div>
-												{% if form.text.errors %}
-												{% for error in form.text.errors %}
-													<p id="post_error" class="custom-error">{{ error }}</p>
-												{% endfor %}
-												{% endif %}
+											<form method="post" action="/" enctype="multipart/form-data">
+												{% include "main/post_form_body.html" %}
 											</form>
 										</div>
 									</div>
