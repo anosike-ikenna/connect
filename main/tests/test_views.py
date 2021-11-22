@@ -8,6 +8,9 @@ from . import create_user, create_fake_user
 from .. import views
 from ..models import TimeLine, Post
 from ..forms import EMPTY_POST_ERROR, PostForm
+from unittest import skip
+import os
+from io import BytesIO
 
 User = get_user_model()
 
@@ -37,6 +40,7 @@ class HomePageTest(TestCase):
     def test_can_save_a_POST_request(self):
         user = create_user()
         self.client.force_login(user)
+        TimeLine.objects.create(user=user)
         response = self.client.post("/", data={"text": "A new post item"})
 
         self.assertEqual(TimeLine.objects.count(), 1)
@@ -221,3 +225,22 @@ class TimeLineViewTest(TestCase):
     def test_for_invalid_input_shows_error_on_page(self):
         response = self.post_invalid_input()
         self.assertContains(response, escape(EMPTY_POST_ERROR))
+
+    def test_can_save_a_POST_request_containing_an_image(self):
+        image = open(os.path.abspath("c:/users/ikenna/pictures/test2.jpg"), "rb")
+        image_data = BytesIO(image.read())
+        image_data.name = "test2.jpg"
+        user = create_user()
+        timeline = TimeLine.objects.create(user=user)
+        self.client.force_login(user)
+
+        response = self.client.post("/timeline/", data={
+            "text": "my post",
+            "image": image_data,
+        })
+
+        self.assertRedirects(response, "/timeline/")
+        post = Post.objects.get(timeline=timeline)
+        self.assertTrue("my post", post.text)
+        self.assertTrue(post.image.name, image_data.name)
+        post.image.delete()

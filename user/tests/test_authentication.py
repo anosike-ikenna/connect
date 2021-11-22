@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.conf import settings
 from django.utils import timezone
+from main.models import TimeLine
 from user.authentication import PasswordlessAuthenticationBackend, utils
 from user.models import Token
 from unittest import skip
@@ -73,6 +74,23 @@ class AuthenticateTest(TestCase):
         )
         new_user = User.objects.get(email=email)
         self.assertEqual(user, new_user)
+
+    def test_creates_timeline_for_new_user_if_token_exists(self):
+        email = "alice@test.com"
+        username = "alice"
+        token = Token.objects.create(email=email, username=username)
+        token.expires = token.created + datetime.timedelta(
+            seconds=settings.PASSWORD_RESET_TIMEOUT
+        )
+        token.save()
+        user = PasswordlessAuthenticationBackend().authenticate(
+            HttpRequest(),
+            token.uid
+        )
+        new_user = User.objects.get(email=email)
+        new_user_timeline = TimeLine.objects.get(user=new_user)
+        self.assertEqual(new_user_timeline.user, new_user)
+        
 
     def test_returns_existing_user_with_correct_email_if_token_exists(self):
         email = "alice@test.com"

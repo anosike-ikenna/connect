@@ -3,6 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
 from django.contrib.sessions.backends.db import SessionStore
+from main.models import TimeLine
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
@@ -24,6 +25,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def create_pre_authenticated_session(self, email, username):
         user = User.objects.create(email=email, username=username)
+        TimeLine.objects.create(user=user)
         session = SessionStore()
         session[SESSION_KEY] = user.pk
         session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]

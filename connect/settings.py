@@ -134,6 +134,14 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR.parent / "static"
 
+
+# Media files
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+POST_UPLOAD_URL = "uploads/"
+
 # The number of days a login token is valid for
 PASSWORD_RESET_TIMEOUT = 60 * 60 * 24   # valid for a day
 

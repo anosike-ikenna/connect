@@ -155,7 +155,9 @@
 													<span class="published_date">{{ post.created|date:"j M, Y @ H:i" }}</span>
 												</div>
 												<div class="post-meta">
-													<img src="/static/main/images/resources/user-post.jpg" alt="">
+													{% if post.image %}
+														<a href="{{ post.image.url }}"><img src="{{ post.image.url }}" alt=""></a>
+													{% endif %}
 													<div class="we-video-info">
 														<ul>
 															<li>

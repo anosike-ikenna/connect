@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.conf.urls.static import static
+from django.conf import settings
 from main import urls as main_urls
 from user import urls as user_urls
 
@@ -22,4 +24,4 @@ urlpatterns = [
     re_path(r"^", include(main_urls)),
     re_path(r"^user/", include(user_urls)),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

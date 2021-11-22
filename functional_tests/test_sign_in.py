@@ -73,6 +73,9 @@ class SignupTest(FunctionalTest):
             self.browser.find_element_by_id("user-msgs").is_displayed()
         )
 
+        # She decides to see what the site is all about by submitting a post
+        self.add_timeline_post("Take me to the rooftop - billie eilish")
+
         # She clicks on the dropdown in the user section once again
         # she notices there is no longer signup and login buttons
         # But a logout button is now on display

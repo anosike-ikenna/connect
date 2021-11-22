@@ -1,3 +1,4 @@
+from main.models import TimeLine
 from user.models import User, Token
 from . import utils
 
@@ -14,10 +15,12 @@ class PasswordlessAuthenticationBackend:
         except Token.DoesNotExist:
             return None
         except User.DoesNotExist:
-            return User.objects.create(
+            user = User.objects.create(
                 email=token.email,
                 username=token.username
             )
+            TimeLine.objects.create(user=user)
+            return user
 
     def get_user(self, user_id):
         try:
