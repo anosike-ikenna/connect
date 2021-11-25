@@ -29,6 +29,41 @@
     margin-top: 15px;
 }
 
+#complete-profile {
+    opacity: 0;
+    color: #ffffff;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    background-color: #008000;
+    position: fixed;
+    left: 5px;
+    bottom: 5px;
+    z-index: 1000000;
+    padding: 2px 2px 2px 2px;
+    /* height: 45px; */
+    /* top: 95vh; */
+}
+
+#c-p-text {
+    /* background-color: red; */
+    color: inherit;
+    padding-left: 2px;
+    padding-right: 5px;
+    font-size: 13px;
+    margin-bottom: 0px;
+}
+
+#c-p-close {
+    color: #ffffd5;
+    margin-left: 10px;
+    padding: 2px 5px 1px 5px;
+    cursor: pointer;
+    /* background-color: blue; */
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
 #file-upload-view {
     overflow: hidden;
     text-overflow: ellipsis;

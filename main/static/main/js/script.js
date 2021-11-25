@@ -399,6 +399,28 @@ jQuery(".post-comt-box textarea").on("keydown", function(event) {
 	// File upload handler
 	let fileHandler = new FileHandler("#file-upload", "#file-name", ["image/jpeg", "image/png"]);
 	fileHandler.processFile();
+
+	// complete profile alert
+	function tweakOpacity(element, count, step, interval) {
+		let tick = 0;
+		let clock = setInterval(() => {
+			element.style.opacity = `${Number(element.style.opacity) + step}`;
+			tick += 1;
+			if (tick == count) {
+				clearInterval(clock);
+			}
+		}, interval);
+	}
+	var test = document.getElementById("complete-profile");
+	if (test) {
+		tweakOpacity(test, 10, 0.1, 50);
+	}
+	var cPClose = document.getElementById("c-p-close");
+	if (cPClose) {
+		cPClose.addEventListener("click", () => {
+			tweakOpacity(test, 10, -0.1, 50);
+		})
+	}
 	
 });//document ready end
 
