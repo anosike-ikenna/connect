@@ -15,16 +15,18 @@ class FileHandler {
 
     processFile() {
         this.input = document.querySelector(this._fileElement);
-        this.input.addEventListener("change", () => {
-            if (this.input.files.length > 0) {
-                this.files = this.input.files;
-                if (this.validateFile()) {
-                    if (this._targetElement) {
-                        this.display();
+        if (this.input) {
+            this.input.addEventListener("change", () => {
+                if (this.input.files.length > 0) {
+                    this.files = this.input.files;
+                    if (this.validateFile()) {
+                        if (this._targetElement) {
+                            this.display();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     display() {
